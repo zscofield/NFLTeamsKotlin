@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.bignerdranch.android.nflteams.databinding.FragmentNflTeamDetailBinding
 import java.util.UUID
 
-class NFLTeamDetailFragment : Fragment() {
+class NFLTeamDetailFragment : Fragment() { //fragment extension
     private var _binding :FragmentNflTeamDetailBinding? = null
     private lateinit var nflteam : NFLTeam
     private val binding
