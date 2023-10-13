@@ -1,9 +1,7 @@
 package com.bignerdranch.android.nflteams
 
-import java.util.UUID
-
 data class NFLTeam(
-    val teamID: UUID,
+    val teamID: String,
     val teamName:String,
     val logoFile: String,
     val conference: String,

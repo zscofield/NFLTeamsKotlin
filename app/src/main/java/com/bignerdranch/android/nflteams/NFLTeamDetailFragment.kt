@@ -1,7 +1,6 @@
 package com.bignerdranch.android.nflteams
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ class NFLTeamDetailFragment : Fragment() {
         conference = "AFC" ,
         division = "AFC" ,
         stadium = "Lucas Oil Stadium" ,
-        teamID = UUID.randomUUID() ,
+        teamID = "string" ,
         latitude = 20.22,
         longitude = 10.11
         )
