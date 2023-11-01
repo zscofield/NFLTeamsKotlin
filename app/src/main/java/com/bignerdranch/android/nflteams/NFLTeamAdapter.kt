@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.nflteams.databinding.ListItemTeamBinding
+import java.util.UUID
 
 class TeamHolder(
     private val binding: ListItemTeamBinding
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(team : NFLTeam ) {
+    fun bind(team : NFLTeam , onTeamClicked: (teamID: UUID) -> Unit  ) {
         binding.teamTitle.text = team.teamName
         binding.teamDivision.text = team.division
         binding.teamConference.text = team.conference
@@ -21,18 +22,15 @@ class TeamHolder(
 
 
         binding.root.setOnClickListener {
-            Toast.makeText(
-                binding.root.context,
-                "${team.teamName} clicked!",
-                Toast.LENGTH_SHORT
-            ).show()
+            onTeamClicked(team.teamID)
         }
     }
 }
 
 
-class CrimeListAdapter(
-    private val teams : List<NFLTeam>
+class NFLTeamAdapter(
+    private val teams : List<NFLTeam> ,
+    private val onTeamClicked: (teamID: UUID) -> Unit
 ) : RecyclerView.Adapter<TeamHolder>() {
 
     override fun onCreateViewHolder(
@@ -46,7 +44,7 @@ class CrimeListAdapter(
 
     override fun onBindViewHolder(holder: TeamHolder, position: Int) {
         val team = teams[position]
-        holder.bind(team)
+        holder.bind(team , onTeamClicked)
     }
 
     override fun getItemCount() = teams.size

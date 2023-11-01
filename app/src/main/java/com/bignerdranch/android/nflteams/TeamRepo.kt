@@ -1,36 +1,52 @@
 package com.bignerdranch.android.nflteams
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import java.lang.IllegalStateException
 import java.util.UUID
-private const val TAG = "TeamListVM"
 
-class NFLTeamListViewModel : ViewModel() {
+class TeamRepo private constructor (private val coroutineScope: CoroutineScope = GlobalScope) {
+    private var teams = mutableListOf<NFLTeam>()
 
-    private val teamRepo : TeamRepo = TeamRepo.get()
-    private val _teamsFlow: MutableStateFlow<List<NFLTeam>> = MutableStateFlow(emptyList())
-    val teamsFlow : StateFlow<List<NFLTeam>>
-        get() = _teamsFlow.asStateFlow()
 
-    init {
-        Log.d(TAG, "init started")
-        viewModelScope.launch {
-            teamRepo.fetchTeams().collect{
-                    teams -> _teamsFlow.value = teams
-            }
-        }
+
+    suspend fun fetchTeams(): Flow<List<NFLTeam>> {
+        delay(5000)
+        return flowOf(teams)
     }
 
+    fun fetchById(teamId: UUID): NFLTeam? {
+        return teams.find{ team -> team.teamID == teamId}
+
+    }
+    fun updateTeam(team : NFLTeam ){
+        coroutineScope.launch{
+            val idx = teams.indexOfFirst{ t -> t.teamID === team.teamID}
+            if (idx >= 0 ) {
+                teams[idx] = team }
+
+        }
+    }
+    companion object{
+        private var INSTANCE:TeamRepo? = null
+        fun initialize(){
+            if (INSTANCE == null){
+                INSTANCE =TeamRepo()
+            }
+        }
+        fun get():TeamRepo{
+            return INSTANCE ?: throw IllegalStateException("Not initialized")
+
+        }
 
 
+    }
 
-
-    val teams = listOf(
+    val teamsList = listOf(
         NFLTeam(
             UUID.randomUUID() ,
             "Chicago Bears",
@@ -352,4 +368,11 @@ class NFLTeamListViewModel : ViewModel() {
             -76.864444
         )
     )
+    init{
+
+            val team = teamsList
+
+            teams += team
+
+    }
 }
